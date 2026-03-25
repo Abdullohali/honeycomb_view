@@ -4,9 +4,11 @@ A Flutter widget that displays images in a beautiful honeycomb grid layout with 
 
 ## Preview
 
-![Honeycomb Demo](https://raw.githubusercontent.com/Abdullohali/honeycomb_view/main/assets/screenshots/demo.gif)
-
-![Screenshot](https://raw.githubusercontent.com/Abdullohali/honeycomb_view/main/assets/screenshots/img1.png)
+<p>
+  <img src="https://raw.githubusercontent.com/Abdullohali/honeycomb_view/main/assets/screenshots/demo.gif" width="250"/>
+  &nbsp;&nbsp;
+  <img src="https://raw.githubusercontent.com/Abdullohali/honeycomb_view/main/assets/screenshots/img1.png" width="250"/>
+</p>
 
 ## Features
 
@@ -23,7 +25,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  honeycomb_view: ^0.0.1
+  honeycomb_view: ^0.0.6
 ```
 
 Then run:
