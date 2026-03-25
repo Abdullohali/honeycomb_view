@@ -26,7 +26,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  honeycomb_view: ^0.0.6
+  honeycomb_view: ^0.0.7
 ```
 
 Then run:
