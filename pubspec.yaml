@@ -1,5 +1,8 @@
 name: honeycomb_view
-description: "A new Flutter package project."
+description: >
+  A Flutter widget that displays images in a beautiful honeycomb 
+  grid layout with dynamic scale and opacity scroll effect. 
+  Inspired by Apple Music's artist view.
 version: 0.0.3
 homepage: https://github.com/Abdullohali/honeycomb_view
 
