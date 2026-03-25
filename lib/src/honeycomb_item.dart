@@ -1,21 +1,9 @@
 import 'package:flutter/material.dart';
 
 /// Honeycomb grid ichidagi har bir aylana element.
-///
-/// [imageUrl] — network rasm manzili.
-/// [size]     — element diametri (px).
-/// [onTap]    — bosilganda chaqiriladigan callback.
-///
-/// ```dart
-/// HoneyCombItem(
-///   imageUrl: 'https://example.com/photo.jpg',
-///   size: 160,
-///   onTap: () => print('tapped'),
-/// )
-/// ```
 class HoneyCombItem extends StatelessWidget {
-  /// Rasm URL manzili.
-  final String imageUrl;
+  /// Rasm manbai — ImageProvider (Network yoki Asset).
+  final ImageProvider image;
 
   /// Element diametri.
   final double size;
@@ -31,7 +19,7 @@ class HoneyCombItem extends StatelessWidget {
 
   const HoneyCombItem({
     super.key,
-    required this.imageUrl,
+    required this.image, // ← image (ImageProvider)
     required this.size,
     this.onTap,
     this.borderColor = Colors.white12,
@@ -53,8 +41,8 @@ class HoneyCombItem extends StatelessWidget {
           ],
         ),
         child: ClipOval(
-          child: Image.network(
-            imageUrl,
+          child: Image(
+            image: image, // ← Image() widget ishlatiladi
             fit: BoxFit.cover,
             loadingBuilder: (_, child, progress) {
               if (progress == null) return child;
@@ -70,7 +58,11 @@ class HoneyCombItem extends StatelessWidget {
             },
             errorBuilder: (_, __, ___) => Container(
               color: Colors.grey[900],
-              child: const Icon(Icons.person, color: Colors.white24, size: 40),
+              child: const Icon(
+                Icons.broken_image,
+                color: Colors.white24,
+                size: 40,
+              ),
             ),
           ),
         ),

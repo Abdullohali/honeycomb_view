@@ -36,8 +36,19 @@ import 'honeycomb_item.dart';
 /// )
 /// ```
 class HoneyCombView extends StatefulWidget {
-  /// Ko'rsatiladigan rasm URL ro'yxati.
+  /// Ko'rsatiladigan rasm yo'llari ro'yxati.
+  ///
+  /// [assetsImage] false (default) bo'lsa — network URL:
+  ///   `'https://example.com/photo.jpg'`
+  ///
+  /// [assetsImage] true bo'lsa — asset yo'li:
+  ///   `'assets/images/photo.jpg'`
   final List<String> images;
+
+  /// true  → rasmlar asset dan o'qiladi (AssetImage).
+  /// false → rasmlar network dan o'qiladi (NetworkImage).
+  /// Default: false.
+  final bool assetsImage;
 
   /// Har bir element diametri. Default: `160`.
   final double itemSize;
@@ -79,32 +90,27 @@ class HoneyCombView extends StatefulWidget {
   const HoneyCombView({
     super.key,
     required this.images,
-    this.itemSize = 160,
-    this.spacing = 12,
-    this.rows = 15,
-    this.columns = 20,
-    this.maxDistance = 280,
-    this.maxScale = 1.0,
-    this.minScale = 0.55,
-    this.maxOpacity = 1.0,
-    this.minOpacity = 0.35,
+    this.assetsImage   = false,
+    this.itemSize      = 160,
+    this.spacing       = 12,
+    this.rows          = 15,
+    this.columns       = 20,
+    this.maxDistance   = 280,
+    this.maxScale      = 1.0,
+    this.minScale      = 0.55,
+    this.maxOpacity    = 1.0,
+    this.minOpacity    = 0.35,
     this.onItemTap,
     this.controller,
     this.backgroundColor = Colors.black,
-  }) : assert(images.length > 0, 'images bo\'sh bo\'lmasligi kerak'),
-       assert(itemSize > 0, 'itemSize musbat bo\'lishi kerak'),
-       assert(spacing >= 0, 'spacing manfiy bo\'lmasligi kerak'),
-       assert(rows > 0, 'rows musbat bo\'lishi kerak'),
-       assert(columns > 0, 'columns musbat bo\'lishi kerak'),
-       assert(maxDistance > 0, 'maxDistance musbat bo\'lishi kerak'),
-       assert(
-         minScale >= 0 && minScale <= 1,
-         'minScale 0..1 oralig\'ida bo\'lishi kerak',
-       ),
-       assert(
-         minOpacity >= 0 && minOpacity <= 1,
-         'minOpacity 0..1 oralig\'ida bo\'lishi kerak',
-       );
+  })  : assert(images.length > 0, 'images bo\'sh bo\'lmasligi kerak'),
+        assert(itemSize > 0,      'itemSize musbat bo\'lishi kerak'),
+        assert(spacing >= 0,      'spacing manfiy bo\'lmasligi kerak'),
+        assert(rows > 0,          'rows musbat bo\'lishi kerak'),
+        assert(columns > 0,       'columns musbat bo\'lishi kerak'),
+        assert(maxDistance > 0,   'maxDistance musbat bo\'lishi kerak'),
+        assert(minScale >= 0 && minScale <= 1, 'minScale 0..1 oralig\'ida bo\'lishi kerak'),
+        assert(minOpacity >= 0 && minOpacity <= 1, 'minOpacity 0..1 oralig\'ida bo\'lishi kerak');
 
   @override
   State<HoneyCombView> createState() => _HoneyCombViewState();
@@ -128,10 +134,10 @@ class _HoneyCombViewState extends State<HoneyCombView> {
 
   void _jumpToCenter() {
     final totalW = widget.columns * (widget.itemSize + widget.spacing);
-    final totalH = widget.rows * (widget.itemSize * 0.866 + widget.spacing);
-    final size = MediaQuery.of(context).size;
+    final totalH = widget.rows    * (widget.itemSize * 0.866 + widget.spacing);
+    final size   = MediaQuery.of(context).size;
 
-    final targetH = ((totalW - size.width) / 2).clamp(0.0, double.infinity);
+    final targetH = ((totalW - size.width)  / 2).clamp(0.0, double.infinity);
     final targetV = ((totalH - size.height) / 2).clamp(0.0, double.infinity);
 
     if (_hCtrl.hasClients) _hCtrl.jumpTo(targetH);
@@ -165,7 +171,7 @@ class _HoneyCombViewState extends State<HoneyCombView> {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
+    final screenSize   = MediaQuery.of(context).size;
     final screenCenter = Offset(screenSize.width / 2, screenSize.height / 2);
 
     return ColoredBox(
@@ -179,19 +185,20 @@ class _HoneyCombViewState extends State<HoneyCombView> {
           scrollDirection: Axis.horizontal,
           physics: const BouncingScrollPhysics(),
           child: _HoneyCombGrid(
-            images: widget.images,
-            itemSize: widget.itemSize,
-            spacing: widget.spacing,
-            rows: widget.rows,
-            columns: widget.columns,
-            maxDistance: widget.maxDistance,
-            maxScale: widget.maxScale,
-            minScale: widget.minScale,
-            maxOpacity: widget.maxOpacity,
-            minOpacity: widget.minOpacity,
-            scrollOffset: _scrollOffset,
-            screenCenter: screenCenter,
-            onItemTap: widget.onItemTap,
+            images:        widget.images,
+            assetsImage:   widget.assetsImage,
+            itemSize:      widget.itemSize,
+            spacing:       widget.spacing,
+            rows:          widget.rows,
+            columns:       widget.columns,
+            maxDistance:   widget.maxDistance,
+            maxScale:      widget.maxScale,
+            minScale:      widget.minScale,
+            maxOpacity:    widget.maxOpacity,
+            minOpacity:    widget.minOpacity,
+            scrollOffset:  _scrollOffset,
+            screenCenter:  screenCenter,
+            onItemTap:     widget.onItemTap,
           ),
         ),
       ),
@@ -203,22 +210,24 @@ class _HoneyCombViewState extends State<HoneyCombView> {
 // Ichki grid widget (foydalanuvchiga ko'rinmaydi)
 // ────────────────────────────────────────────────────────────────
 class _HoneyCombGrid extends StatelessWidget {
-  final List<String> images;
-  final double itemSize;
-  final double spacing;
-  final int rows;
-  final int columns;
-  final double maxDistance;
-  final double maxScale;
-  final double minScale;
-  final double maxOpacity;
-  final double minOpacity;
-  final Offset scrollOffset;
-  final Offset screenCenter;
+  final List<String>       images;
+  final bool               assetsImage;
+  final double             itemSize;
+  final double             spacing;
+  final int                rows;
+  final int                columns;
+  final double             maxDistance;
+  final double             maxScale;
+  final double             minScale;
+  final double             maxOpacity;
+  final double             minOpacity;
+  final Offset             scrollOffset;
+  final Offset             screenCenter;
   final ValueChanged<int>? onItemTap;
 
   const _HoneyCombGrid({
     required this.images,
+    required this.assetsImage,
     required this.itemSize,
     required this.spacing,
     required this.rows,
@@ -235,12 +244,17 @@ class _HoneyCombGrid extends StatelessWidget {
 
   double _lerp(double a, double b, double t) => a + (b - a) * t;
 
+  /// assetsImage flagiga qarab to'g'ri ImageProvider qaytaradi
+  ImageProvider _resolveImage(String path) {
+    return assetsImage ? AssetImage(path) : NetworkImage(path);
+  }
+
   @override
   Widget build(BuildContext context) {
     final double rowHeight = itemSize * 0.866 + spacing;
-    final double colWidth = itemSize + spacing;
-    final double totalW = columns * colWidth + itemSize / 2;
-    final double totalH = rows * rowHeight + itemSize / 2;
+    final double colWidth  = itemSize + spacing;
+    final double totalW    = columns * colWidth + itemSize / 2;
+    final double totalH    = rows    * rowHeight + itemSize / 2;
 
     return SizedBox(
       width: totalW,
@@ -248,37 +262,40 @@ class _HoneyCombGrid extends StatelessWidget {
       child: Stack(
         children: List.generate(rows * columns, (index) {
           final row = index ~/ columns;
-          final col = index % columns;
+          final col = index %  columns;
 
-          final double offsetX = (row % 2 == 0)
-              ? 0.0
-              : (itemSize + spacing) / 2;
+          final double offsetX =
+              (row % 2 == 0) ? 0.0 : (itemSize + spacing) / 2;
 
-          final double x = col * colWidth + offsetX + spacing / 2;
+          final double x = col * colWidth  + offsetX   + spacing / 2;
           final double y = row * rowHeight + spacing / 2;
 
           final double worldX = x - scrollOffset.dx + itemSize / 2;
           final double worldY = y - scrollOffset.dy + itemSize / 2;
 
-          final double dist = (Offset(worldX, worldY) - screenCenter).distance;
-          final double t = (dist / maxDistance).clamp(0.0, 1.0);
+          final double dist =
+              (Offset(worldX, worldY) - screenCenter).distance;
+          final double t =
+              (dist / maxDistance).clamp(0.0, 1.0);
 
-          final double scale = _lerp(maxScale, minScale, t);
+          final double scale   = _lerp(maxScale,   minScale,   t);
           final double opacity = _lerp(maxOpacity, minOpacity, t);
 
           final int imgIndex = (row * columns + col) % images.length;
 
           return Positioned(
             left: x,
-            top: y,
+            top:  y,
             child: Opacity(
               opacity: opacity,
               child: Transform.scale(
                 scale: scale,
                 child: HoneyCombItem(
-                  imageUrl: images[imgIndex],
-                  size: itemSize,
-                  onTap: onItemTap != null ? () => onItemTap!(imgIndex) : null,
+                  image:    _resolveImage(images[imgIndex]),
+                  size:     itemSize,
+                  onTap:    onItemTap != null
+                      ? () => onItemTap!(imgIndex)
+                      : null,
                 ),
               ),
             ),
