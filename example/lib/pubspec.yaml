@@ -1,0 +1,13 @@
+name: honeycomb_view_example
+description: Example app for honeycomb_view package.
+publish_to: 'none'        
+
+environment:
+  sdk: ^3.10.7
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  honeycomb_view:
+    path: ../
