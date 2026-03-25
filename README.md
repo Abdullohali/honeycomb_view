@@ -17,6 +17,7 @@ A Flutter widget that displays images in a beautiful honeycomb grid layout with 
 - ↔️ Both horizontal and vertical scrolling
 - 🎯 Tap callback with image index
 - 🎮 Controller for programmatic scroll (e.g. scroll to center)
+- 🖼️ Supports both Network and Asset images
 - ⚙️ Fully customizable (size, spacing, rows, columns, effects)
 
 ## Installation
@@ -36,7 +37,7 @@ flutter pub get
 
 ## Usage
 
-### Basic
+### Basic — Network images (default)
 
 ```dart
 import 'package:honeycomb_view/honeycomb_view.dart';
@@ -49,6 +50,28 @@ HoneyCombView(
   ],
 )
 ```
+
+### Asset images
+
+Set `assetsImage: true` to load images from your local assets folder.
+
+```dart
+HoneyCombView(
+  assetsImage: true,
+  images: [
+    'assets/images/photo1.jpg',
+    'assets/images/photo2.jpg',
+    'assets/images/photo3.jpg',
+  ],
+)
+```
+
+> Don't forget to declare your assets in `pubspec.yaml`:
+> ```yaml
+> flutter:
+>   assets:
+>     - assets/images/
+> ```
 
 ### Full example
 
@@ -106,7 +129,8 @@ class _MyScreenState extends State<MyScreen> {
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
-| `images` | `List<String>` | **required** | Network image URL list |
+| `images` | `List<String>` | **required** | Image path or URL list |
+| `assetsImage` | `bool` | `false` | `true` → AssetImage, `false` → NetworkImage |
 | `itemSize` | `double` | `160` | Circle diameter in pixels |
 | `spacing` | `double` | `12` | Gap between items |
 | `rows` | `int` | `15` | Number of rows in grid |
@@ -134,4 +158,4 @@ controller.scrollToCenter(duration: Duration(milliseconds: 600));
 
 ## License
 
-MIT License — see [LICENSE](LICENSE) for details.# honeycomb_view
+MIT License — see [LICENSE](LICENSE) for details.
